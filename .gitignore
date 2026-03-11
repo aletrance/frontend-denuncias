@@ -1,0 +1,7 @@
+node_modules/
+dist/
+uploads/*.pdf
+.env
+error.log
+*.rar
+*.zip
