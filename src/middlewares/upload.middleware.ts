@@ -10,9 +10,8 @@ const storage = multer.diskStorage({
         cb(null, UPLOADS_DIR);
     },
     filename(_req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-        const timestamp = Date.now();
         const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
-        cb(null, `${timestamp}-${sanitizedName}`);
+        cb(null, sanitizedName);
     },
 });
 
