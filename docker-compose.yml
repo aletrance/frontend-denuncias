@@ -10,8 +10,11 @@ services:
 
     volumes:
       - uploads_data:/app/uploads
+      - informes_data:/app/03_INFORMES_LISTOS
     restart: unless-stopped
 
 volumes:
   uploads_data:
+    driver: local
+  informes_data:
     driver: local
