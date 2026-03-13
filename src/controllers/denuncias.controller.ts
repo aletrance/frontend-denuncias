@@ -56,7 +56,7 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
     try {
         const query = `
             SELECT 
-                "#" AS "Id", nombre_archivo, prioritario, estado, plantilla_aplicar, 
+                id AS "Id", nombre_archivo, prioritario, estado, plantilla_aplicar, 
                 c_numero_expediente, fecha_ingreso, v_nombre_completo, d_nombre_completo,
                 categoria_sugerida, usuario_validador, fecha_firma, justificacion,
                 v_dni, v_telefono, d_dni, vinculo_partes, c_fecha_hechos,
@@ -70,7 +70,7 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
                 defensoria_numero, telefonos_defensoria, celular_defensoria,
                 telefono_polo_mujer, telefono_turno, celular_turno, resumen_preliminar
             FROM denuncias 
-            ORDER BY "#" DESC
+            ORDER BY id DESC
             LIMIT 100
         `;
         
@@ -109,7 +109,7 @@ export const updateDenuncia = async (req: Request, res: Response): Promise<void>
         const query = `
             UPDATE denuncias 
             SET plantilla_aplicar = $1, estado = $2
-            WHERE "#" = $3
+            WHERE id = $3
             RETURNING *
         `;
         
