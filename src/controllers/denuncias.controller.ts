@@ -115,8 +115,8 @@ export const updateDenuncia = async (req: Request, res: Response): Promise<void>
         
         const result = await pool.query(query, [
             validatedData.plantilla_aplicar, 
-            'Aprobado', 
-            parseInt(id, 10)
+            'APROBADO', 
+            id
         ]);
 
         if (result.rowCount === 0) {

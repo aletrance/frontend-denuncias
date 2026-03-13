@@ -93,8 +93,8 @@
                                                 <span class="px-2 py-[1px] rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 tracking-wider">PRIORITARIO</span>
                                             <% } %>
                                             <span class="status-badge px-2 py-[1px] rounded text-[10px] font-medium border
-                                                <%= denuncia.estado === 'Completado' || denuncia.estado === 'Aprobado' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-blue-500/10 border-blue-500/20 text-blue-400' %>">
-                                                <%= denuncia.estado || 'Pendiente' %>
+                                                <%= denuncia.estado && (denuncia.estado.toUpperCase() === 'COMPLETADO' || denuncia.estado.toUpperCase() === 'APROBADO') ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-blue-500/10 border-blue-500/20 text-blue-400' %>">
+                                                <%= denuncia.estado ? denuncia.estado.toUpperCase() : 'PENDIENTE' %>
                                             </span>
                                         </div>
                                         <p class="text-slate-500 text-xs mt-0.5 flex items-center gap-2">
@@ -405,7 +405,7 @@
                         
                         const statusBadge = row.querySelector('.status-badge');
                         if (statusBadge) {
-                            statusBadge.textContent = 'Aprobado';
+                            statusBadge.textContent = 'APROBADO';
                             statusBadge.className = 'status-badge px-2 py-[1px] rounded text-[10px] font-medium border bg-emerald-500/10 border-emerald-500/20 text-emerald-400';
                         }
                         
