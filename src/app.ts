@@ -6,6 +6,8 @@ import fs from 'fs';
 import { sessionOptions } from './config/session.config';
 import authRoutes from './routes/auth.routes';
 import uploadRoutes from './routes/upload.routes';
+import denunciasRoutes from './routes/denuncias.routes';
+import informesRoutes from './routes/informes.routes';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -29,6 +31,8 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // Routes
 app.use('/', authRoutes);
 app.use('/', uploadRoutes);
+app.use('/', denunciasRoutes);
+app.use('/', informesRoutes);
 
 // Root redirect
 app.get('/', (_req, res) => {
