@@ -24,6 +24,10 @@ interface UserRecord {
 
 const USERS: UserRecord[] = [
     { username: 'admin', password: 'Admin123!', displayName: 'Administrador' },
+    { username: 'stonini', password: 'Stonini24#', displayName: 'Secretaria 2' },
+    { username: 'cmcastil', password: 'Cmcastil78$', displayName: 'Secretaria 3' },
+    { username: 'galvan', password: 'Galvan91%', displayName: 'Secretaria 4' },
+    { username: 'pperez', password: 'Pperez56*', displayName: 'Secretaria 1' },
 ];
 
 function findUser(username: string, password: string): UserRecord | undefined {
