@@ -28,6 +28,9 @@ const USERS: UserRecord[] = [
     { username: 'cmcastil', password: 'Cmcastil78$', displayName: 'Secretaria 3' },
     { username: 'galvan', password: 'Galvan91%', displayName: 'Secretaria 4' },
     { username: 'pperez', password: 'Pperez56*', displayName: 'Secretaria 1' },
+    { username: 'alvarezm', password: 'Alvarezm32!', displayName: 'Secretaria 5' },
+    { username: 'luchente', password: 'Luchente85#', displayName: 'Secretaria 6' },
+    { username: 'generalesa', password: 'Generalesa47$', displayName: 'Secretaria 7' },
 ];
 
 function findUser(username: string, password: string): UserRecord | undefined {
