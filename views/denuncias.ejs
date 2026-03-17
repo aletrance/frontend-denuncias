@@ -399,18 +399,17 @@
                             throw new Error(result.error || 'Error del servidor');
                         }
 
-                        // Update DOM 
-                        valContainer.textContent = `Plantilla ${newValue}`;
-                        selectElement.dataset.current = newValue; // Update base reference
+                        // Update DOM: Remove the row with an animation
+                        row.classList.add('opacity-0', 'scale-95', 'translate-x-4');
+                        setTimeout(() => {
+                            row.remove();
+                            // If list is empty, show empty state (optional improvement)
+                            if (document.querySelectorAll('#denunciasList > li').length === 0) {
+                                location.reload(); // Quick way to show empty state from server
+                            }
+                        }, 500);
                         
-                        const statusBadge = row.querySelector('.status-badge');
-                        if (statusBadge) {
-                            statusBadge.textContent = 'APROBADO';
-                            statusBadge.className = 'status-badge px-2 py-[1px] rounded text-[10px] font-medium border bg-emerald-500/10 border-emerald-500/20 text-emerald-400';
-                        }
-                        
-                        showAlert('Plantilla actualizada con éxito', 'success');
-                        toggleEditMode(false);
+                        showAlert('Plantilla actualizada y denuncia procesada', 'success');
 
                     } catch (error) {
                         console.error('Update error:', error);
@@ -425,6 +424,18 @@
                 // Prevent click on select from toggling accordion
                 selectElement.addEventListener('click', (e) => e.stopPropagation());
             });
+
+            // Auto-refresh logic (Polling every 30 seconds)
+            // It only refreshes if NOT in edit mode
+            setInterval(() => {
+                const anyInEditMode = document.querySelector('.btn-edit.hidden');
+                if (!anyInEditMode) {
+                    console.log('Auto-refreshing denuncias list...');
+                    // Optimized: we could fetch and diff, but for now simple reload is safer
+                    // to ensure consistency with the user's request "como el de informes listos"
+                    location.reload();
+                }
+            }, 30000); 
         });
     </script>
 </body>

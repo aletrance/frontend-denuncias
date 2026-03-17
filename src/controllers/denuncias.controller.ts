@@ -70,6 +70,7 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
                 defensoria_numero, telefonos_defensoria, celular_defensoria,
                 telefono_polo_mujer, telefono_turno, celular_turno, resumen_preliminar
             FROM denuncias 
+            WHERE estado IS NULL OR estado != 'APROBADO'
             ORDER BY id DESC
             LIMIT 100
         `;
