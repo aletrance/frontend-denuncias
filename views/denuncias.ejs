@@ -61,16 +61,32 @@
             <div id="alertContainer" class="hidden transform transition-all duration-300"></div>
         </div>
 
-        <% if (error) { %>
-            <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm flex items-start gap-3" role="alert">
-                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-                <span><%= error %></span>
-            </div>
-        <% } %>
-
         <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
+            <% if (error) { %>
+                <ul class="space-y-4 mb-4" id="serverErrorList">
+                    <li class="group bg-red-900/30 hover:bg-red-900/40 border border-red-500/40 rounded-xl transition-all duration-300 shadow-sm">
+                        <div class="py-4 px-5 flex items-center justify-between">
+                            <div class="flex items-center gap-4 min-w-0 flex-1">
+                                <div class="w-10 h-10 rounded-lg bg-red-500/20 border border-red-500/30 flex flex-shrink-0 items-center justify-center">
+                                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                                <div class="min-w-0 flex flex-col">
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-red-300 font-bold text-sm tracking-wide">ERROR EN EL SISTEMA DE PLANTILLAS</p>
+                                    </div>
+                                    <p class="text-red-200 text-xs mt-0.5 leading-relaxed">
+                                        Origen: Servidor Backend <br>
+                                        Detalle: <%= error %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            <% } %>
+
             <% if (denuncias && denuncias.length > 0) { %>
                 <ul class="space-y-4" id="denunciasList">
                     <% denuncias.forEach((denuncia, index) => { %>
@@ -354,6 +370,12 @@
                         btnCancel.classList.remove('hidden');
                         valContainer.classList.add('hidden');
                         selContainer.classList.remove('hidden');
+                        // Restore precise value, bugfix: don't default to template 1
+                        if (selectElement.dataset.current) {
+                            selectElement.value = selectElement.dataset.current;
+                        } else {
+                            selectElement.value = "";
+                        }
                         selectElement.focus();
                     } else {
                         btnEdit.classList.remove('hidden');
@@ -413,7 +435,34 @@
 
                     } catch (error) {
                         console.error('Update error:', error);
-                        showAlert(error.message, 'error');
+                        // Mostrar el error como una tarjeta roja en la lista
+                        const listContainer = document.getElementById('denunciasList');
+                        if (listContainer) {
+                            const errorCard = document.createElement('li');
+                            errorCard.className = 'group bg-red-900/30 hover:bg-red-900/40 border border-red-500/40 rounded-xl transition-all duration-300 shadow-sm mb-4';
+                            errorCard.innerHTML = `
+                                <div class="py-4 px-5 flex items-center justify-between">
+                                    <div class="flex items-center gap-4 min-w-0 flex-1">
+                                        <div class="w-10 h-10 rounded-lg bg-red-500/20 border border-red-500/30 flex flex-shrink-0 items-center justify-center">
+                                            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                        </div>
+                                        <div class="min-w-0 flex flex-col">
+                                            <p class="text-red-300 font-bold text-sm tracking-wide">ERROR DE GUARDADO</p>
+                                            <p class="text-red-200 text-xs mt-0.5 leading-relaxed">
+                                                Origen: Controlador de Actualización (ID: ${recordId})<br>
+                                                Detalle: ${error.message}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button class="text-red-400 hover:text-white p-2" onclick="this.closest('li').remove()">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                            `;
+                            listContainer.insertBefore(errorCard, listContainer.firstChild);
+                        }
                     } finally {
                         btnSave.innerHTML = originalBtnContent;
                         btnSave.disabled = false;

@@ -57,10 +57,15 @@
 
     <!-- Main Content -->
     <main class="max-w-2xl mx-auto px-4 py-12">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-white tracking-tight">Subir Documento PDF</h1>
-            <p class="text-slate-400 mt-2 text-sm">Seleccione un archivo PDF (máximo 10 MB)</p>
+        <div class="mb-8 flex items-center justify-between">
+            <div class="text-center w-full">
+                <h1 class="text-2xl font-bold text-white tracking-tight">Subir Documento PDF</h1>
+                <p class="text-slate-400 mt-2 text-sm">Seleccione un archivo PDF (máximo 10 MB)</p>
+            </div>
         </div>
+
+        <!-- Alert Container for dynamic feedback -->
+        <div id="alertContainer" class="hidden mb-6 transform transition-all duration-300"></div>
 
         <% if (error) { %>
             <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm flex items-start gap-3"
@@ -157,13 +162,13 @@
 
                 const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
                 if (!isPdf) {
-                    alert('Solo se permiten archivos PDF (.pdf)');
+                    showAlert('Solo se permiten archivos PDF (.pdf)', 'error');
                     fileInput.value = '';
                     return false;
                 }
 
                 if (file.size > 10 * 1024 * 1024) {
-                    alert('El archivo excede el tamaño máximo de 10 MB');
+                    showAlert('El archivo excede el tamaño máximo de 10 MB', 'error');
                     fileInput.value = '';
                     return false;
                 }
@@ -229,16 +234,59 @@
             uploadForm.addEventListener('submit', function (e) {
                 if (!fileInput.files || fileInput.files.length === 0) {
                     e.preventDefault();
-                    alert('Debe seleccionar un archivo PDF');
+                    showAlert('Debe seleccionar un archivo PDF', 'error');
                     return;
                 }
                 const file = fileInput.files[0];
                 const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
                 if (!isPdf) {
                     e.preventDefault();
-                    alert('Solo se permiten archivos PDF (.pdf)');
+                    showAlert('Solo se permiten archivos PDF (.pdf)', 'error');
                 }
             });
+            // Form validation before submit
+            uploadForm.addEventListener('submit', function (e) {
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    e.preventDefault();
+                    showAlert('Debe seleccionar un archivo PDF', 'error');
+                    return;
+                }
+                const file = fileInput.files[0];
+                const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                if (!isPdf) {
+                    e.preventDefault();
+                    showAlert('Solo se permiten archivos PDF (.pdf)', 'error');
+                }
+            });
+
+            const showAlert = (message, type = 'success') => {
+                const container = document.getElementById('alertContainer');
+                const isSuccess = type === 'success';
+                const colors = isSuccess 
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+                    : 'bg-red-500/10 border-red-500/30 text-red-400';
+                
+                container.innerHTML = `
+                    <div class="px-4 py-3 rounded-xl text-sm border flex items-start gap-3 ${colors}">
+                        <div class="mt-0.5">
+                            ${isSuccess 
+                                ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
+                                : '<svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>'
+                            }
+                        </div>
+                        <div class="flex-1">${message}</div>
+                    </div>
+                `;
+                container.classList.remove('hidden');
+
+                setTimeout(() => {
+                    container.classList.add('opacity-0');
+                    setTimeout(() => {
+                        container.classList.add('hidden');
+                        container.classList.remove('opacity-0');
+                    }, 300);
+                }, 4000);
+            };
         })();
     </script>
 
