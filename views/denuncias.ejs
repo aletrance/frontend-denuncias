@@ -131,11 +131,19 @@
                                             <%= denuncia.plantilla_aplicar ? 'Plantilla ' + denuncia.plantilla_aplicar : 'Sin Asignar' %>
                                         </span>
                                         <div class="template-select-container hidden w-full max-w-[140px]">
+                                            <%
+                                                // Extract the number in case the DB has descriptive text like "3, Prohibión sin..."
+                                                let plantId = null;
+                                                if (denuncia.plantilla_aplicar) {
+                                                    const match = String(denuncia.plantilla_aplicar).match(/^\s*(\d+)/);
+                                                    if (match) plantId = parseInt(match[1], 10);
+                                                }
+                                            %>
                                             <select class="template-select bg-slate-800 border border-white/10 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5"
-                                                data-current="<%= denuncia.plantilla_aplicar %>">
-                                                <option value="" disabled <%= !denuncia.plantilla_aplicar ? 'selected' : '' %>>Seleccione (1-7)</option>
+                                                data-current="<%= plantId || '' %>">
+                                                <option value="" disabled <%= !plantId ? 'selected' : '' %>>Seleccione (1-7)</option>
                                                 <% for(let i=1; i<=7; i++) { %>
-                                                    <option value="<%= i %>" <%= denuncia.plantilla_aplicar == i ? 'selected' : '' %>>Plantilla <%= i %></option>
+                                                    <option value="<%= i %>" <%= plantId === i ? 'selected' : '' %>>Plantilla <%= i %></option>
                                                 <% } %>
                                             </select>
                                         </div>
