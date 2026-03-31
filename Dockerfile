@@ -30,7 +30,7 @@ COPY public/ ./public/
 
 # Create uploads and informes directories
 RUN mkdir -p /app/uploads && chown -R appuser:appgroup /app/uploads \
-    && mkdir -p /app/03_INFORMES_LISTOS && chown -R appuser:appgroup /app/03_INFORMES_LISTOS
+    && mkdir -p /app/download && chown -R appuser:appgroup /app/download
 
 # Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
