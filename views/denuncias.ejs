@@ -432,10 +432,21 @@
                             badge.className = 'status-badge px-2 py-[1px] rounded text-[10px] font-medium border bg-emerald-500/10 border-emerald-500/20 text-emerald-400';
                         }
 
-                        // Exit edit mode
+                        // Exit edit mode immediately so they see the result
                         toggleEditMode(false);
-                        
                         showAlert('Plantilla actualizada y denuncia procesada', 'success');
+
+                        // Wait a moment so the user can clearly see which template they set 
+                        // and that it was successfully approved, then remove it.
+                        setTimeout(() => {
+                            row.classList.add('opacity-0', 'scale-95', 'translate-x-4');
+                            setTimeout(() => {
+                                row.remove();
+                                if (document.querySelectorAll('#denunciasList > li').length === 0) {
+                                    location.reload(); 
+                                }
+                            }, 500); // Wait for CSS animation
+                        }, 2500); // 2.5 seconds visible before disappearing
 
                     } catch (error) {
                         console.error('Update error:', error);
