@@ -10,7 +10,7 @@ services:
 
     volumes:
       - uploads_data:/app/uploads
-      - informes_data:/app/03_INFORMES_LISTOS
+      - informes_data:/app/download
     restart: unless-stopped
 
 volumes:
