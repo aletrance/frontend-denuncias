@@ -421,15 +421,19 @@
                             throw new Error(result.error || 'Error del servidor');
                         }
 
-                        // Update DOM: Remove the row with an animation
-                        row.classList.add('opacity-0', 'scale-95', 'translate-x-4');
-                        setTimeout(() => {
-                            row.remove();
-                            // If list is empty, show empty state (optional improvement)
-                            if (document.querySelectorAll('#denunciasList > li').length === 0) {
-                                location.reload(); // Quick way to show empty state from server
-                            }
-                        }, 500);
+                        // Update DOM: Show the new selected template and change status to APROBADO
+                        selectElement.dataset.current = newValue;
+                        valContainer.innerText = 'Plantilla ' + newValue;
+                        
+                        // Update status badge
+                        const badge = row.querySelector('.status-badge');
+                        if (badge) {
+                            badge.innerText = 'APROBADO';
+                            badge.className = 'status-badge px-2 py-[1px] rounded text-[10px] font-medium border bg-emerald-500/10 border-emerald-500/20 text-emerald-400';
+                        }
+
+                        // Exit edit mode
+                        toggleEditMode(false);
                         
                         showAlert('Plantilla actualizada y denuncia procesada', 'success');
 
