@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Request, Response } from 'express';
 
-export const REPORTS_DIR = path.join(process.cwd(), 'download');
+export const REPORTS_DIR = path.join(process.cwd(), '03_INFORMES_LISTOS');
 
 /**
  * Ensure the directory exists
