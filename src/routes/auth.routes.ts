@@ -43,7 +43,7 @@ function findUser(username: string, password: string): UserRecord | undefined {
 /** GET /login — render login form */
 router.get('/login', (_req: Request, res: Response) => {
     if (_req.session.isAuthenticated) {
-        res.redirect('/upload');
+        res.redirect('/denuncias');
         return;
     }
     res.render('login', { error: null });
@@ -69,7 +69,7 @@ router.post('/login', (req: Request, res: Response) => {
 
     req.session.isAuthenticated = true;
     req.session.username = user.displayName;
-    res.redirect('/upload');
+    res.redirect('/denuncias');
 });
 
 /** POST /logout — destroy session and redirect to login */
