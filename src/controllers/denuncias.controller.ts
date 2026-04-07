@@ -55,23 +55,26 @@ export interface Denuncia {
 export const getDenuncias = async (req: Request, res: Response): Promise<void> => {
     try {
         const query = `
-            SELECT 
-                id AS "Id", nombre_archivo, prioritario, estado, plantilla_aplicar, 
-                c_numero_expediente, fecha_ingreso, v_nombre_completo, d_nombre_completo,
-                categoria_sugerida, usuario_validador, fecha_firma, justificacion,
-                v_dni, v_telefono, d_dni, vinculo_partes, c_fecha_hechos,
-                c_numero_comisaria, c_numero_denuncia_policial, c_tipo_violencia,
-                c_modalidad_violencia, hay_antecedentes_violencia, descripcion_amenazas,
-                m_solicita_abstencion_actos_violencia, m_solicita_prohibicion_acercamiento,
-                m_distancia_metros, m_solicita_exclusion_hogar, m_solicita_reintegro_efectos_personales,
-                m_solicita_alimentos_provisorios, m_solicita_boton_antipanico,
-                m_solicita_custodia_policial, triage_activadores, triage_evidencia,
-                clasificacion_criterio, clasificacion_evidencia, triage_justificacion,
-                defensoria_numero, telefonos_defensoria, celular_defensoria,
-                telefono_polo_mujer, telefono_turno, celular_turno, resumen_preliminar
-            FROM denuncias 
-            WHERE estado IS NULL OR estado != 'APROBADO'
-            ORDER BY id DESC
+            SELECT * FROM (
+                SELECT DISTINCT ON (COALESCE(nombre_archivo, id::text))
+                    id AS "Id", nombre_archivo, prioritario, estado, plantilla_aplicar, 
+                    c_numero_expediente, fecha_ingreso, v_nombre_completo, d_nombre_completo,
+                    categoria_sugerida, usuario_validador, fecha_firma, justificacion,
+                    v_dni, v_telefono, d_dni, vinculo_partes, c_fecha_hechos,
+                    c_numero_comisaria, c_numero_denuncia_policial, c_tipo_violencia,
+                    c_modalidad_violencia, hay_antecedentes_violencia, descripcion_amenazas,
+                    m_solicita_abstencion_actos_violencia, m_solicita_prohibicion_acercamiento,
+                    m_distancia_metros, m_solicita_exclusion_hogar, m_solicita_reintegro_efectos_personales,
+                    m_solicita_alimentos_provisorios, m_solicita_boton_antipanico,
+                    m_solicita_custodia_policial, triage_activadores, triage_evidencia,
+                    clasificacion_criterio, clasificacion_evidencia, triage_justificacion,
+                    defensoria_numero, telefonos_defensoria, celular_defensoria,
+                    telefono_polo_mujer, telefono_turno, celular_turno, resumen_preliminar
+                FROM denuncias 
+                WHERE estado IS NULL OR estado != 'APROBADO'
+                ORDER BY COALESCE(nombre_archivo, id::text), id DESC
+            ) as sub
+            ORDER BY "Id" DESC
             LIMIT 100
         `;
         
