@@ -50,18 +50,20 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="max-w-5xl mx-auto px-4 py-8">
-        
-        <div class="mb-8 flex items-center justify-between">
+    <main class="max-w-6xl mx-auto space-y-6 py-8 px-4">
+        <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-white tracking-tight">Control de Plantillas</h1>
-                <p class="text-slate-400 mt-1 text-sm">Administra el estado y las plantillas a aplicar en base a los datos extraídos</p>
+                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">Control de Plantillas</h1>
+                <p class="text-slate-400 mt-2">Administra el estado y las plantillas a aplicar en base a los datos extraídos</p>
             </div>
-            <!-- Alert Container for dynamic feedback -->
-            <div id="alertContainer" class="hidden transform transition-all duration-300"></div>
-        </div>
+        </header>
 
-        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
+        <div class="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 shadow-xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-slate-200">Cargas en Espera v2</h2>
+                <div id="alertContainer" class="hidden transform transition-all duration-300"></div>
+            </div>
+
             <% if (error) { %>
                 <ul class="space-y-4 mb-4" id="serverErrorList">
                     <li class="group bg-red-900/30 hover:bg-red-900/40 border border-red-500/40 rounded-xl transition-all duration-300 shadow-sm">

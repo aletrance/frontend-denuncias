@@ -86,17 +86,32 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
         `;
         
         const result = await pool.query<Denuncia>(query);
-        const records = result.rows;
+        let records = result.rows;
+
+        // IRONCLAD JAVASCRIPT DEDUPLICATION
+        // Fallback filter just in case the SQL query bypasses edge cases (e.g. carriage returns in data)
+        const uniqueRecords = [];
+        const seen = new Set();
+        
+        for (const record of records) {
+            const fileName = (record.nombre_archivo || '').trim();
+            const templateId = record.plantilla_aplicar || '0';
+            const key = `${fileName}_${templateId}`;
+            
+            if (!seen.has(key)) {
+                seen.add(key);
+                uniqueRecords.push(record);
+            }
+        }
 
         res.render('denuncias', {
             username: req.session.username,
-            denuncias: records,
+            denuncias: uniqueRecords,
             error: null
         });
     } catch (error) {
         console.error('Error fetching denuncias from PostgreSQL:', error);
         
-        // No mock data here to encourage fixing the DB connection
         res.render('denuncias', {
             username: req.session.username,
             denuncias: [],
