@@ -57,8 +57,7 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
         const query = `
             SELECT * FROM (
                 SELECT DISTINCT ON (
-                    TRIM(COALESCE(nombre_archivo, id::text)), 
-                    COALESCE(plantilla_aplicar::text, '0')
+                    TRIM(COALESCE(nombre_archivo, id::text))
                 )
                     id AS "Id", nombre_archivo, prioritario, estado, plantilla_aplicar, 
                     c_numero_expediente, fecha_ingreso, v_nombre_completo, d_nombre_completo,
@@ -76,7 +75,6 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
                 FROM denuncias 
                 ORDER BY 
                     TRIM(COALESCE(nombre_archivo, id::text)), 
-                    COALESCE(plantilla_aplicar::text, '0'),
                     (estado = 'APROBADO') DESC,
                     id DESC
             ) as sub
@@ -95,8 +93,7 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
         
         for (const record of records) {
             const fileName = (record.nombre_archivo || '').trim();
-            const templateId = record.plantilla_aplicar || '0';
-            const key = `${fileName}_${templateId}`;
+            const key = `${fileName}`;
             
             if (!seen.has(key)) {
                 seen.add(key);
