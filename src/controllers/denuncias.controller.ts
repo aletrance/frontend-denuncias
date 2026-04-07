@@ -56,7 +56,10 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
     try {
         const query = `
             SELECT * FROM (
-                SELECT DISTINCT ON (COALESCE(nombre_archivo, id::text))
+                SELECT DISTINCT ON (
+                    TRIM(COALESCE(nombre_archivo, id::text)), 
+                    COALESCE(plantilla_aplicar::text, '0')
+                )
                     id AS "Id", nombre_archivo, prioritario, estado, plantilla_aplicar, 
                     c_numero_expediente, fecha_ingreso, v_nombre_completo, d_nombre_completo,
                     categoria_sugerida, usuario_validador, fecha_firma, justificacion,
@@ -71,9 +74,13 @@ export const getDenuncias = async (req: Request, res: Response): Promise<void> =
                     defensoria_numero, telefonos_defensoria, celular_defensoria,
                     telefono_polo_mujer, telefono_turno, celular_turno, resumen_preliminar
                 FROM denuncias 
-                WHERE estado IS NULL OR estado != 'APROBADO'
-                ORDER BY COALESCE(nombre_archivo, id::text), id DESC
+                ORDER BY 
+                    TRIM(COALESCE(nombre_archivo, id::text)), 
+                    COALESCE(plantilla_aplicar::text, '0'),
+                    (estado = 'APROBADO') DESC,
+                    id DESC
             ) as sub
+            WHERE estado IS NULL OR estado != 'APROBADO'
             ORDER BY "Id" DESC
             LIMIT 100
         `;
